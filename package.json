@@ -10,7 +10,8 @@
     "clean": "rimraf ./dist ./compiled",
     "typecheck": "tsc --noEmit",
     "publish": "npm publish  --access=public --scope=grafana",
-    "test": "jest --notify --watch"
+    "test": "jest --notify --watch",
+    "postinstall": "yarn build"
   },
   "files": [
     "index.js",
