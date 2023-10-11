@@ -1,14 +1,13 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
+import typescript from '@rollup/plugin-typescript';
 
-import typescript from 'rollup-plugin-typescript2';
-
-const pkg = require('./package.json');
+import pkg from './package.json' assert { type: 'json' };
 
 const libraryName = pkg.name;
 
-const buildCjsPackage = ({ env }) => {
+const buildCjsPackage = ({ env }: any) => {
   return {
     input: 'src/index.ts',
     output: [
@@ -29,8 +28,7 @@ const buildCjsPackage = ({ env }) => {
     external: ['react', '@grafana/data', '@grafana/ui'],
     plugins: [
       typescript({
-        rollupCommonJSResolveHack: false,
-        clean: true,
+        sourceMap: true,
       }),
       commonjs({
         include: /node_modules/,
