@@ -1260,10 +1260,10 @@
   dependencies:
     tslib "2.6.0"
 
-"@grafana/toolkit@10.1.4":
-  version "10.1.4"
-  resolved "https://registry.yarnpkg.com/@grafana/toolkit/-/toolkit-10.1.4.tgz#4fe97cd13f8ed0641abb1a2f9df54a1876c8d495"
-  integrity sha512-DHqtj1oUZ6S8+W884kbF/4FvlpqLabnV2NwnwSb/jhnf3mrkQIBPkvjVYM8vd/+MjZGOjvrw7JnVYNWjJGnz+A==
+"@grafana/toolkit@10.1.5":
+  version "10.1.5"
+  resolved "https://registry.yarnpkg.com/@grafana/toolkit/-/toolkit-10.1.5.tgz#3b3709fb053bd934a83f4df152c7d629a681218a"
+  integrity sha512-Oh96kqgryhUAvJoSSutw0MLXLCCF/zN8kToYRSdVdzFtfbQhoAxpoo+QRfFvx3yrzygE3FbAqFzZdaYo7R8hVg==
   dependencies:
     "@grafana/tsconfig" "^1.2.0-rc1"
     "@types/node" "16.11.26"
