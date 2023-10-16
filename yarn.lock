@@ -1225,10 +1225,41 @@
     uplot "1.6.24"
     xss "^1.0.14"
 
-"@grafana/e2e-selectors@10.1.4":
-  version "10.1.4"
-  resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-10.1.4.tgz#150eab282458da06bc0fb44ce46602e47b14ebed"
-  integrity sha512-KhmOwpjZY+H4z4J8I2blsxPnuWZ20e0ZOu6QohT5dejm+ZOQ8Ir2h+xHLjl+gxBohVwILGvw+v2fywHr/yCZlQ==
+"@grafana/data@10.1.5":
+  version "10.1.5"
+  resolved "https://registry.yarnpkg.com/@grafana/data/-/data-10.1.5.tgz#26cbac07e054a9655838894f9870c20b8df6383d"
+  integrity sha512-wZQ2IdLPY8jXsbruK3bRyYcl4dLIwLLokhuAggpbCUOkiuRdiV5hQYvspuwnbN7/panhcJXLghWats165JQxkg==
+  dependencies:
+    "@braintree/sanitize-url" "6.0.2"
+    "@grafana/schema" "10.1.5"
+    "@types/d3-interpolate" "^3.0.0"
+    "@types/string-hash" "1.1.1"
+    d3-interpolate "3.0.1"
+    date-fns "2.30.0"
+    dompurify "^2.4.3"
+    eventemitter3 "5.0.0"
+    fast_array_intersect "1.1.0"
+    history "4.10.1"
+    lodash "4.17.21"
+    marked "5.1.1"
+    marked-mangle "1.1.0"
+    moment "2.29.4"
+    moment-timezone "0.5.41"
+    ol "7.4.0"
+    papaparse "5.4.1"
+    react-use "17.4.0"
+    regenerator-runtime "0.13.11"
+    rxjs "7.8.0"
+    string-hash "^1.1.3"
+    tinycolor2 "1.6.0"
+    tslib "2.6.0"
+    uplot "1.6.24"
+    xss "^1.0.14"
+
+"@grafana/e2e-selectors@10.1.5":
+  version "10.1.5"
+  resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-10.1.5.tgz#7af58c17ae088cb7795aff8f7a4bd42358918536"
+  integrity sha512-7sYrfkIYM6Rx+I8yIlQYucp5EGDnTxAOXv8AIbn7SOTMpVuJqa4abK8NgRfjfusSuGHSAGqb7VOa+/JJnzUGsA==
   dependencies:
     "@grafana/tsconfig" "^1.2.0-rc1"
     tslib "2.6.0"
@@ -1260,6 +1291,13 @@
   dependencies:
     tslib "2.6.0"
 
+"@grafana/schema@10.1.5":
+  version "10.1.5"
+  resolved "https://registry.yarnpkg.com/@grafana/schema/-/schema-10.1.5.tgz#f3c431cc84bb48b6002218c46849a5a1bfdfb8a4"
+  integrity sha512-mrahunqx5rR8ZGcba1AqNNkU5ToSFjmdezqpba2xY0WOFunlHFIBKr9xr9RPftQ9e9tV6JSnSdjcVRXPZ2bQ7w==
+  dependencies:
+    tslib "2.6.0"
+
 "@grafana/toolkit@10.1.4":
   version "10.1.4"
   resolved "https://registry.yarnpkg.com/@grafana/toolkit/-/toolkit-10.1.4.tgz#4fe97cd13f8ed0641abb1a2f9df54a1876c8d495"
@@ -1283,17 +1321,17 @@
   resolved "https://registry.yarnpkg.com/@grafana/tsconfig/-/tsconfig-1.3.0-rc1.tgz#ca5ffa03edb3cb59bd503a7e6b3a3e15ac528d77"
   integrity sha512-bi+qFOptejg/a2/WmCDVxQLQtobhKd3y+B6mxFBOMmzElqgr30MPnN60THTou6dGwtfw+ExX1H5FGm9DM35Qrw==
 
-"@grafana/ui@10.1.4":
-  version "10.1.4"
-  resolved "https://registry.yarnpkg.com/@grafana/ui/-/ui-10.1.4.tgz#11b3cf09ed61812c27878344e868ab444aa98403"
-  integrity sha512-KlV7h65ZyxomPomva9illPBnpUEGa4bZRBlN7/4Yk9EE/YKjI090oAOvM0bDOiRDGeWAXoNpvyrhSpYZr4AW8A==
+"@grafana/ui@10.1.5":
+  version "10.1.5"
+  resolved "https://registry.yarnpkg.com/@grafana/ui/-/ui-10.1.5.tgz#4c1fe42748127be9475df9150c56af3a662c50da"
+  integrity sha512-o+qI5fy+rouzd220SwbXZXk8nfw3P8UWPAbu6jWBSq/MGWds4h3f14+F7rpohB88rqIGEOtjHq73gsCil5kB8g==
   dependencies:
     "@emotion/css" "11.11.2"
     "@emotion/react" "11.11.1"
-    "@grafana/data" "10.1.4"
-    "@grafana/e2e-selectors" "10.1.4"
+    "@grafana/data" "10.1.5"
+    "@grafana/e2e-selectors" "10.1.5"
     "@grafana/faro-web-sdk" "1.1.0"
-    "@grafana/schema" "10.1.4"
+    "@grafana/schema" "10.1.5"
     "@leeoniya/ufuzzy" "1.0.8"
     "@monaco-editor/react" "4.5.1"
     "@popperjs/core" "2.11.6"
