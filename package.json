@@ -30,7 +30,7 @@
     "@grafana/data": "10.2.0",
     "@grafana/toolkit": "10.1.4",
     "@grafana/tsconfig": "^1.3.0-rc1",
-    "@grafana/ui": "10.1.4",
+    "@grafana/ui": "10.2.0",
     "@rollup/plugin-commonjs": "25.0.7",
     "@rollup/plugin-json": "6.0.1",
     "@rollup/plugin-node-resolve": "15.2.3",
