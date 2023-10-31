@@ -7,7 +7,6 @@ import pkg from './package.json' assert { type: 'json' };
 
 const packagePath = './package.json';
 
-
 export default [
   {
     input: 'src/index.ts',
