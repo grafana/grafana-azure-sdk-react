@@ -46,6 +46,7 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.5.7",
     "@types/react": "^18.2.33",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
     "cspell": "^7.3.8",
     "esbuild": "^0.19.5",
     "eslint": "^8.52.0",
