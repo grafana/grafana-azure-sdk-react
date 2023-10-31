@@ -27,4 +27,5 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: [],
+  passWithNoTests: true,
 };
