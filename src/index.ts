@@ -1,1 +1,1 @@
-export { AzureCredentialsForm, AzureCredentialsFormProps } from './AzureCredentialsForm';
+export { AzureCredentialsForm, type AzureCredentialsFormProps } from './AzureCredentialsForm';
