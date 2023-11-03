@@ -1,0 +1,4 @@
+{
+  "ignorePaths": [".github/**", "node_modules/**", "dist/**", "yarn.lock"],
+  "words": ["typecheck"]
+}

@@ -1,12 +1,13 @@
 {
-  "extends": "@grafana/tsconfig/base.json",
-  "include": ["src", "index.js", "rollup.config.ts"],
+  "extends": "@grafana/tsconfig",
+  "include": ["src/**/*.ts"],
   "compilerOptions": {
-    "rootDir": "./",
     "baseUrl": "./src",
+    "rootDir": "./src",
     "typeRoots": ["./node_modules/@types"],
-    "declaration": true,
-    "outDir": "dist",
+    "declarationDir": "./compiled",
+    "emitDeclarationOnly": true,
+    "isolatedModules": true,
     "resolveJsonModule": true
   }
 }
