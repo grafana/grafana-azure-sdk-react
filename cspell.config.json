@@ -1,4 +1,9 @@
 {
   "ignorePaths": [".github/**", "node_modules/**", "dist/**", "yarn.lock"],
-  "words": ["typecheck"]
+  "words": [
+    "clientsecret",
+    "currentuser",
+    "typecheck",
+    "workloadidentity"
+  ]
 }
