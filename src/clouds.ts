@@ -1,5 +1,7 @@
 import { AzureSettings, config } from '@grafana/runtime';
 
+// TODO: Remove when the list of clouds added directly to @grafana/runtime
+//  https://github.com/grafana/grafana/pull/84039
 interface AzureSettings2 extends AzureSettings {
   clouds?: AzureCloudInfo[];
 }
