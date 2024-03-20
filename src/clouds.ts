@@ -1,9 +1,4 @@
-import { config } from '@grafana/runtime';
-
-export interface AzureCloudInfo {
-  name: string;
-  displayName: string;
-}
+import { AzureCloudInfo, config } from '@grafana/runtime';
 
 const predefinedClouds: AzureCloudInfo[] = [
   {
