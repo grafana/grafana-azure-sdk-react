@@ -19,7 +19,7 @@ export function getAzureClouds(): AzureCloudInfo[] {
   const settingsEx = config.azure;
 
   // Return list of clouds from Grafana configuration if they are provided
-  if (Array.isArray(settingsEx.clouds)) {
+  if (Array.isArray(settingsEx.clouds) && settingsEx.clouds.length > 0) {
     return settingsEx.clouds;
   }
 
