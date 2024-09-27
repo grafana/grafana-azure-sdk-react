@@ -6,8 +6,13 @@ interface AzureCredentialsBase {
   authType: AzureAuthType;
 }
 
-interface AadCurrentUserCredentials extends AzureCredentialsBase {
+export interface AadCurrentUserCredentials extends AzureCredentialsBase {
   authType: 'currentuser';
+  serviceCredentials?:
+    | AzureClientSecretCredentials
+    | AzureManagedIdentityCredentials
+    | AzureWorkloadIdentityCredentials;
+  serviceCredentialsEnabled?: boolean;
 }
 
 export interface AzureManagedIdentityCredentials extends AzureCredentialsBase {
@@ -26,7 +31,7 @@ export interface AzureClientSecretCredentials extends AzureCredentialsBase {
   clientSecret?: string | ConcealedSecret;
 }
 
-interface AzureClientSecretOboCredentials extends AzureCredentialsBase {
+export interface AzureClientSecretOboCredentials extends AzureCredentialsBase {
   authType: 'clientsecret-obo';
   azureCloud?: string;
   tenantId?: string;
@@ -40,3 +45,13 @@ export type AzureCredentials =
   | AzureWorkloadIdentityCredentials
   | AzureClientSecretCredentials
   | AzureClientSecretOboCredentials;
+
+export function instanceOfAzureCredential<T extends AzureCredentials>(
+  authType: AzureAuthType,
+  object?: AzureCredentials
+): object is T {
+  if (!object) {
+    return false;
+  }
+  return object.authType === authType;
+}

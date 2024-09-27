@@ -4,6 +4,7 @@
     "clientsecret",
     "currentuser",
     "typecheck",
-    "workloadidentity"
+    "workloadidentity",
+    "datasource"
   ]
 }

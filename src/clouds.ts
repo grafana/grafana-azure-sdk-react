@@ -1,5 +1,12 @@
 import { AzureCloudInfo, config } from '@grafana/runtime';
 
+export enum AzureCloud {
+  Public = 'AzureCloud',
+  China = 'AzureChinaCloud',
+  USGovernment = 'AzureUSGovernment',
+  None = '',
+}
+
 const predefinedClouds: AzureCloudInfo[] = [
   {
     name: 'AzureCloud',
@@ -24,4 +31,8 @@ export function getAzureClouds(): AzureCloudInfo[] {
   }
 
   return predefinedClouds;
+}
+
+export function getDefaultAzureCloud(): string {
+  return config.azure.cloud || AzureCloud.Public;
 }
