@@ -28,7 +28,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "react-dom": "^18.3.1",
-    "ts-jest": "29.1.2"
+    "ts-jest": "29.2.5"
   },
   "devDependencies": {
     "@grafana/data": "11.2.0",
