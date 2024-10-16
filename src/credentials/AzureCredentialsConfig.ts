@@ -20,6 +20,7 @@ export function isCredentialsComplete(credentials: AzureCredentials, ignoreSecre
     case 'currentuser':
       return true;
     case 'clientsecret':
+    case 'clientsecret-obo':
       return !!(
         credentials.azureCloud &&
         credentials.tenantId &&
@@ -27,8 +28,8 @@ export function isCredentialsComplete(credentials: AzureCredentials, ignoreSecre
         // When ignoreSecret is set we consider the credentials complete without checking the secret
         !!(ignoreSecret || credentials.clientSecret)
       );
-    default:
-      throw new Error(`The auth type '${credentials.authType}' not supported.`);
+    case 'ad-password':
+      return !!(credentials.clientId && credentials.password && credentials.userId);
   }
 }
 
@@ -51,8 +52,25 @@ export function getClientSecret(
   }
 }
 
-export function getDatasourceCredentials(
+export function getAdPassword(
   options: AzureDataSourceSettings | AzureDataSourceInstanceSettings
+): undefined | string | ConcealedSecret {
+  if (!('secureJsonFields' in options) || !options.hasOwnProperty('secureJsonFields')) {
+    return undefined;
+  }
+
+  if (options.secureJsonFields.password) {
+    // The secret is concealed on server
+    return concealed;
+  } else {
+    const secret = options.secureJsonData?.password;
+    return typeof secret === 'string' && secret.length > 0 ? secret : undefined;
+  }
+}
+
+export function getDatasourceCredentials(
+  options: AzureDataSourceSettings | AzureDataSourceInstanceSettings,
+  oboEnabled?: boolean,
 ): AzureCredentials | undefined {
   const credentials = options.jsonData.azureCredentials;
 
@@ -77,6 +95,12 @@ export function getDatasourceCredentials(
         return undefined;
       }
     case 'clientsecret':
+    case 'clientsecret-obo':
+      if (credentials.authType === 'clientsecret-obo' && !oboEnabled) {
+        // If authentication type is OBO but OBO were disabled in Grafana config,
+        // then we should fall back to an empty default credentials
+        return undefined;
+      }
       return {
         authType: credentials.authType,
         azureCloud: credentials.azureCloud || getDefaultAzureCloud(),
@@ -84,8 +108,22 @@ export function getDatasourceCredentials(
         clientId: credentials.clientId,
         clientSecret: getClientSecret(options),
       };
+    case 'ad-password':
+      return {
+        authType: credentials.authType,
+        userId: credentials.userId,
+        clientId: credentials.clientId,
+        password: getAdPassword(options),
+      };
   }
   if (instanceOfAzureCredential<AadCurrentUserCredentials>(credentials.authType, credentials)) {
+    if (!config.azure.userIdentityEnabled)
+    {
+      // If authentication type is current user but current user was disabled in Grafana config,
+      // then we should fall back to an empty default credentials
+      return undefined;
+    }
+
     if (instanceOfAzureCredential<AzureClientSecretCredentials>('clientsecret', credentials.serviceCredentials)) {
       const serviceCredentials = { ...credentials.serviceCredentials, clientSecret: getClientSecret(options) };
       return {
@@ -101,12 +139,13 @@ export function getDatasourceCredentials(
     };
   }
 
-  throw new Error(`The auth type '${credentials.authType}' not supported.`);
+  throw new Error(`Unsupported auth type.`);
 }
 
 export function updateDatasourceCredentials(
   options: AzureDataSourceSettings,
-  credentials: AzureCredentials
+  credentials: AzureCredentials,
+  oboEnabled?: boolean
 ): AzureDataSourceSettings {
   // Cleanup any legacy credentials if they exist
   options = {
@@ -143,6 +182,11 @@ export function updateDatasourceCredentials(
       return options;
 
     case 'clientsecret':
+    case 'clientsecret-obo':
+      if (credentials.authType === 'clientsecret-obo' && !oboEnabled) {
+        throw new Error('Client Secret OBO authentication is not enabled in Grafana config.');
+      }
+
       options = {
         ...options,
         jsonData: {
@@ -168,9 +212,50 @@ export function updateDatasourceCredentials(
         },
       };
 
+      if (credentials.authType === 'clientsecret-obo') {
+        options = {
+          ...options,
+          jsonData: {
+            ...options.jsonData,
+            oauthPassThru: true,
+          },
+        };
+      }
+
+      return options;
+
+    case 'ad-password':
+      options = {
+        ...options,
+        jsonData: {
+          ...options.jsonData,
+          azureCredentials: {
+            authType: 'ad-password',
+            userId: credentials.userId,
+            clientId: credentials.clientId,
+          },
+        },
+        secureJsonData: {
+          ...options.secureJsonData,
+          password:
+            typeof credentials.password === 'string' && credentials.password.length > 0
+              ? credentials.password
+              : undefined,
+        },
+        secureJsonFields: {
+          ...options.secureJsonFields,
+          password: typeof credentials.password === 'symbol',
+        },
+      };
+
       return options;
   }
   if (instanceOfAzureCredential<AadCurrentUserCredentials>('currentuser', credentials)) {
+    if (!config.azure.userIdentityEnabled)
+    {
+      throw new Error('User Identity authentication is not enabled in Grafana config.');
+    }
+
     const serviceCredentials = credentials.serviceCredentials;
     let clientSecret: string | symbol | undefined;
     if (instanceOfAzureCredential<AzureClientSecretCredentials>('clientsecret', serviceCredentials)) {
@@ -182,12 +267,12 @@ export function updateDatasourceCredentials(
       ...options,
       jsonData: {
         ...options.jsonData,
-        azureAuthType: credentials.authType,
         azureCredentials: {
           authType: 'currentuser',
           serviceCredentialsEnabled: credentials.serviceCredentialsEnabled,
           serviceCredentials,
         },
+        oauthPassThru: true,
       },
       secureJsonData: {
         ...options.secureJsonData,
@@ -203,5 +288,9 @@ export function updateDatasourceCredentials(
     return options;
   }
 
-  throw new Error(`The auth type '${credentials.authType}' not supported.`);
+  throw new Error(`Unsupported auth type.`);
+}
+
+export function hasCredentials(options: AzureDataSourceSettings): boolean {
+  return !!options.jsonData.azureCredentials;
 }

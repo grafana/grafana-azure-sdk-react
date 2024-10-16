@@ -5,6 +5,7 @@ import { AzureAuthType, AzureCredentials } from './credentials/AzureCredentials'
 export interface AzureDataSourceJsonData extends DataSourceJsonData {
   // Azure credentials
   azureCredentials?: AzureCredentials;
+  oauthPassThru?: boolean;
 
   // Legacy Azure credentials
   cloudName?: string;
@@ -15,6 +16,7 @@ export interface AzureDataSourceJsonData extends DataSourceJsonData {
 
 export interface AzureDataSourceSecureJsonData {
   azureClientSecret?: string;
+  password?: string;
 
   // Legacy Azure credentials
   clientSecret?: string;

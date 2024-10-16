@@ -5,6 +5,9 @@
     "currentuser",
     "typecheck",
     "workloadidentity",
-    "datasource"
+    "datasource",
+    "azuremonitor",
+    "chinaazuremonitor",
+    "govazuremonitor"
   ]
 }

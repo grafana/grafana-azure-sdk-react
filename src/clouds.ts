@@ -36,3 +36,21 @@ export function getAzureClouds(): AzureCloudInfo[] {
 export function getDefaultAzureCloud(): string {
   return config.azure.cloud || AzureCloud.Public;
 }
+
+export function resolveLegacyCloudName(cloudName: string | undefined): string | undefined {
+  if (!cloudName) {
+    // if undefined, allow the code to fallback to calling getDefaultAzureCloud() since that has the complete logic for handling an empty cloud name
+    return undefined;
+  }
+
+  switch (cloudName) {
+    case 'azuremonitor':
+      return AzureCloud.Public;
+    case 'chinaazuremonitor':
+      return AzureCloud.China;
+    case 'govazuremonitor':
+      return AzureCloud.USGovernment;
+    default:
+      throw new Error(`Azure cloud '${cloudName}' is not recognized by datasource.`);
+  }
+}
