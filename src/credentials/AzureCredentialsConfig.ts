@@ -14,7 +14,8 @@ export const concealed: ConcealedSecret = Symbol('Concealed client secret');
 export const concealedLegacy: ConcealedSecret = Symbol('Concealed legacy client secret');
 
 export function isCredentialsComplete(credentials: AzureCredentials, ignoreSecret = false): boolean {
-  switch (credentials.authType) {
+  const authType = credentials.authType;
+  switch (authType) {
     case 'msi':
     case 'workloadidentity':
     case 'currentuser':
@@ -30,7 +31,9 @@ export function isCredentialsComplete(credentials: AzureCredentials, ignoreSecre
       );
     case 'ad-password':
       return !!(credentials.clientId && credentials.password && credentials.userId);
-  }
+    default:
+      throw new Error(`The auth type '${authType}' not supported.`);
+    }
 }
 
 export function getClientSecret(
@@ -79,15 +82,16 @@ export function getDatasourceCredentials(
     return undefined;
   }
 
-  switch (credentials.authType) {
+  const authType = credentials.authType;
+  switch (authType) {
     case 'msi':
     case 'workloadidentity':
       if (
-        (credentials.authType === 'msi' && config.azure.managedIdentityEnabled) ||
-        (credentials.authType === 'workloadidentity' && config.azure.workloadIdentityEnabled)
+        (authType === 'msi' && config.azure.managedIdentityEnabled) ||
+        (authType === 'workloadidentity' && config.azure.workloadIdentityEnabled)
       ) {
         return {
-          authType: credentials.authType,
+          authType: authType,
         };
       } else {
         // If authentication type is managed identity or workload identity but either method is disabled in Grafana config,
@@ -96,13 +100,13 @@ export function getDatasourceCredentials(
       }
     case 'clientsecret':
     case 'clientsecret-obo':
-      if (credentials.authType === 'clientsecret-obo' && !oboEnabled) {
+      if (authType === 'clientsecret-obo' && !oboEnabled) {
         // If authentication type is OBO but OBO were disabled in Grafana config,
         // then we should fall back to an empty default credentials
         return undefined;
       }
       return {
-        authType: credentials.authType,
+        authType: authType,
         azureCloud: credentials.azureCloud || getDefaultAzureCloud(),
         tenantId: credentials.tenantId,
         clientId: credentials.clientId,
@@ -110,13 +114,13 @@ export function getDatasourceCredentials(
       };
     case 'ad-password':
       return {
-        authType: credentials.authType,
+        authType: authType,
         userId: credentials.userId,
         clientId: credentials.clientId,
         password: getAdPassword(options),
       };
   }
-  if (instanceOfAzureCredential<AadCurrentUserCredentials>(credentials.authType, credentials)) {
+  if (instanceOfAzureCredential<AadCurrentUserCredentials>(authType, credentials)) {
     if (!config.azure.userIdentityEnabled)
     {
       // If authentication type is current user but current user was disabled in Grafana config,
@@ -127,19 +131,19 @@ export function getDatasourceCredentials(
     if (instanceOfAzureCredential<AzureClientSecretCredentials>('clientsecret', credentials.serviceCredentials)) {
       const serviceCredentials = { ...credentials.serviceCredentials, clientSecret: getClientSecret(options) };
       return {
-        authType: credentials.authType,
+        authType: authType,
         serviceCredentialsEnabled: credentials.serviceCredentialsEnabled,
         serviceCredentials,
       };
     }
     return {
-      authType: credentials.authType,
+      authType: authType,
       serviceCredentialsEnabled: credentials.serviceCredentialsEnabled,
       serviceCredentials: credentials.serviceCredentials,
     };
   }
 
-  throw new Error(`Unsupported auth type.`);
+  throw new Error(`The auth type '${authType}' is not supported.`);
 }
 
 export function updateDatasourceCredentials(
@@ -159,13 +163,14 @@ export function updateDatasourceCredentials(
     },
   };
 
-  switch (credentials.authType) {
+  const authType = credentials.authType
+  switch (authType) {
     case 'msi':
     case 'workloadidentity':
-      if (credentials.authType === 'msi' && !config.azure.managedIdentityEnabled) {
+      if (authType === 'msi' && !config.azure.managedIdentityEnabled) {
         throw new Error('Managed Identity authentication is not enabled in Grafana config.');
       }
-      if (credentials.authType === 'workloadidentity' && !config.azure.workloadIdentityEnabled) {
+      if (authType === 'workloadidentity' && !config.azure.workloadIdentityEnabled) {
         throw new Error('Workload Identity authentication is not enabled in Grafana config.');
       }
 
@@ -174,7 +179,7 @@ export function updateDatasourceCredentials(
         jsonData: {
           ...options.jsonData,
           azureCredentials: {
-            authType: credentials.authType,
+            authType: authType,
           },
         },
       };
@@ -183,7 +188,7 @@ export function updateDatasourceCredentials(
 
     case 'clientsecret':
     case 'clientsecret-obo':
-      if (credentials.authType === 'clientsecret-obo' && !oboEnabled) {
+      if (authType === 'clientsecret-obo' && !oboEnabled) {
         throw new Error('Client Secret OBO authentication is not enabled in Grafana config.');
       }
 
@@ -192,7 +197,7 @@ export function updateDatasourceCredentials(
         jsonData: {
           ...options.jsonData,
           azureCredentials: {
-            authType: credentials.authType,
+            authType: authType,
             azureCloud: credentials.azureCloud || getDefaultAzureCloud(),
             tenantId: credentials.tenantId,
             clientId: credentials.clientId,
@@ -212,7 +217,7 @@ export function updateDatasourceCredentials(
         },
       };
 
-      if (credentials.authType === 'clientsecret-obo') {
+      if (authType === 'clientsecret-obo') {
         options = {
           ...options,
           jsonData: {
@@ -288,7 +293,7 @@ export function updateDatasourceCredentials(
     return options;
   }
 
-  throw new Error(`Unsupported auth type.`);
+  throw new Error(`The auth type '${authType}' is not supported.`);
 }
 
 export function hasCredentials(options: AzureDataSourceSettings): boolean {
