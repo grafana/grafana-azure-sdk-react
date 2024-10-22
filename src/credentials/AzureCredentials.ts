@@ -1,4 +1,4 @@
-export type AzureAuthType = 'currentuser' | 'msi' | 'workloadidentity' | 'clientsecret' | 'clientsecret-obo';
+export type AzureAuthType = 'currentuser' | 'msi' | 'workloadidentity' | 'clientsecret' | 'clientsecret-obo' | 'currentuser' | 'ad-password';
 
 export type ConcealedSecret = symbol;
 
@@ -39,12 +39,20 @@ export interface AzureClientSecretOboCredentials extends AzureCredentialsBase {
   clientSecret?: string | ConcealedSecret;
 }
 
+export interface AzureAdPasswordCredentials extends AzureCredentialsBase {
+  authType: 'ad-password';
+  userId?: string;
+  clientId?: string;
+  password?: string | ConcealedSecret;
+}
+
 export type AzureCredentials =
   | AadCurrentUserCredentials
   | AzureManagedIdentityCredentials
   | AzureWorkloadIdentityCredentials
   | AzureClientSecretCredentials
-  | AzureClientSecretOboCredentials;
+  | AzureClientSecretOboCredentials
+  | AzureAdPasswordCredentials;
 
 export function instanceOfAzureCredential<T extends AzureCredentials>(
   authType: AzureAuthType,
