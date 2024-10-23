@@ -1,6 +1,6 @@
 {
   "name": "@grafana/azure-sdk",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Common Azure features for Grafana",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
