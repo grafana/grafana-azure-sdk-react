@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Report a bug you found when using this library
-labels: ["azure-sdk", "type/bug"]
+labels: ['azure-sdk', 'type/bug']
 ---
 
 <!--
