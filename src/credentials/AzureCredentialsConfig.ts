@@ -276,6 +276,7 @@ export function updateDatasourceCredentials(
           serviceCredentials,
         },
         oauthPassThru: true,
+        disableGrafanaCache: true,
       },
       secureJsonData: {
         ...options.secureJsonData,
