@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.5
+
+- Add missing user-auth property [#215](https://github.com/grafana/grafana-azure-sdk-react/pull/215)
+- Dependency updates
+
 ## v0.0.4
 
 - Dependency updates
