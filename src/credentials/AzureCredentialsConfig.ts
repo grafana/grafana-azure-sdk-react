@@ -33,7 +33,7 @@ export function isCredentialsComplete(credentials: AzureCredentials, ignoreSecre
       return !!(credentials.clientId && credentials.password && credentials.userId);
     default:
       throw new Error(`The auth type '${authType}' not supported.`);
-    }
+  }
 }
 
 export function getClientSecret(
@@ -73,7 +73,7 @@ export function getAdPassword(
 
 export function getDatasourceCredentials(
   options: AzureDataSourceSettings | AzureDataSourceInstanceSettings,
-  oboEnabled?: boolean,
+  oboEnabled?: boolean
 ): AzureCredentials | undefined {
   const credentials = options.jsonData.azureCredentials;
 
@@ -121,8 +121,7 @@ export function getDatasourceCredentials(
       };
   }
   if (instanceOfAzureCredential<AadCurrentUserCredentials>(authType, credentials)) {
-    if (!config.azure.userIdentityEnabled)
-    {
+    if (!config.azure.userIdentityEnabled) {
       // If authentication type is current user but current user was disabled in Grafana config,
       // then we should fall back to an empty default credentials
       return undefined;
@@ -163,7 +162,7 @@ export function updateDatasourceCredentials(
     },
   };
 
-  const authType = credentials.authType
+  const authType = credentials.authType;
   switch (authType) {
     case 'msi':
     case 'workloadidentity':
@@ -256,8 +255,7 @@ export function updateDatasourceCredentials(
       return options;
   }
   if (instanceOfAzureCredential<AadCurrentUserCredentials>('currentuser', credentials)) {
-    if (!config.azure.userIdentityEnabled)
-    {
+    if (!config.azure.userIdentityEnabled) {
       throw new Error('User Identity authentication is not enabled in Grafana config.');
     }
 
@@ -278,6 +276,7 @@ export function updateDatasourceCredentials(
           serviceCredentials,
         },
         oauthPassThru: true,
+        disableGrafanaCache: true,
       },
       secureJsonData: {
         ...options.secureJsonData,

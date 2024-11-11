@@ -1,4 +1,11 @@
-export type AzureAuthType = 'currentuser' | 'msi' | 'workloadidentity' | 'clientsecret' | 'clientsecret-obo' | 'currentuser' | 'ad-password';
+export type AzureAuthType =
+  | 'currentuser'
+  | 'msi'
+  | 'workloadidentity'
+  | 'clientsecret'
+  | 'clientsecret-obo'
+  | 'currentuser'
+  | 'ad-password';
 
 export type ConcealedSecret = symbol;
 
