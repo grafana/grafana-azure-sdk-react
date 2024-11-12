@@ -52,7 +52,7 @@
     "@types/react": "^18.2.48",
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "babel-jest": "^29.7.0",
-    "cspell": "8.6.1",
+    "cspell": "8.16.0",
     "esbuild": "^0.24.0",
     "eslint": "^8.54.0",
     "eslint-plugin-jsdoc": "^50.2.4",
