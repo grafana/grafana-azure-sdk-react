@@ -1,5 +1,5 @@
 {
-  "ignorePaths": [".github/**", "node_modules/**", "dist/**", "yarn.lock", "src/resources/**"],
+  "ignorePaths": [".github/**", "node_modules/**", "dist/**", "yarn.lock", "src/resources/**", "compiled/**"],
   "words": [
     "clientsecret",
     "currentuser",
