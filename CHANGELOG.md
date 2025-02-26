@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.6
+
+- Add list of Metrics Supported Resource Types [#235](https://github.com/grafana/grafana-azure-sdk-react/pull/235)
+
 ## v0.0.5
 
 - Add missing user-auth property [#215](https://github.com/grafana/grafana-azure-sdk-react/pull/215)
