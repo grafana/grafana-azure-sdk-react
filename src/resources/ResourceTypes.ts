@@ -1,6 +1,6 @@
 export const ResourceTypes = {
   AnalysisServices: 'microsoft.analysisservices/servers',
-  ApiManagmentService: 'microsoft.apimanagement/service',
+  ApiManagementService: 'microsoft.apimanagement/service',
   ApplicationGateways: 'microsoft.network/applicationgateways',
   ApplicationGatewayforContainers: 'microsoft.servicenetworking/trafficcontrollers',
   ApplicationInsights: 'microsoft.insights/components',
@@ -152,7 +152,7 @@ export const ResourceTypes = {
   StorageSync: 'microsoft.storagesync/storagesyncservices',
   StreamAnalyticsJobs: 'microsoft.streamanalytics/streamingjobs',
   SynapseWorkspace: 'microsoft.synapse/workspaces',
-  TimeseriesInsightsEnviroments: 'microsoft.timeseriesinsights/environments',
+  TimeseriesInsightsEnvironments: 'microsoft.timeseriesinsights/environments',
   TrafficManagerProfiles: 'microsoft.network/trafficmanagerprofiles',
   VirtualHubs: 'microsoft.network/virtualhubs',
   VirtualMachines: 'microsoft.compute/virtualmachines',

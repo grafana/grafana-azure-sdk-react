@@ -2,7 +2,7 @@ import { ResourceTypes } from './ResourceTypes';
 
 export const MetricsSupportedTypes: string[] = [
   ResourceTypes.AnalysisServices,
-  ResourceTypes.ApiManagmentService,
+  ResourceTypes.ApiManagementService,
   ResourceTypes.ApplicationGateways,
   ResourceTypes.ApplicationGatewayforContainers,
   ResourceTypes.ApplicationInsights,
@@ -135,7 +135,7 @@ export const MetricsSupportedTypes: string[] = [
   ResourceTypes.StorageSync,
   ResourceTypes.StreamAnalyticsJobs,
   ResourceTypes.SynapseWorkspace,
-  ResourceTypes.TimeseriesInsightsEnviroments,
+  ResourceTypes.TimeseriesInsightsEnvironments,
   ResourceTypes.TrafficManagerProfiles,
   ResourceTypes.VirtualMachines,
   ResourceTypes.VirtualMachinesScaleSets,
