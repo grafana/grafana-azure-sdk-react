@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.7
+
+- Fix exporting of resource types
+
 ## v0.0.6
 
 - Add list of Metrics Supported Resource Types [#235](https://github.com/grafana/grafana-azure-sdk-react/pull/235)
