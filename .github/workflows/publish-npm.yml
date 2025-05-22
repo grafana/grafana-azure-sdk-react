@@ -9,6 +9,10 @@ jobs:
   publish:
     name: Publish to NPM & GitHub Package Registry
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,11 +49,18 @@ jobs:
         if: steps.version_check.outputs.changed == 'true'
         run: yarn build
 
+      - name: Get vault secrets
+        if: steps.version_check.outputs.changed == 'true'
+        id: vault-secrets
+        uses: grafana/shared-workflows/actions/get-vault-secrets@main # zizmor: ignore[unpinned-uses]
+        with:
+          repo_secrets: |
+            NPM_TOKEN=npm-publish:token
       - name: Publish package to NPM
         if: steps.version_check.outputs.changed == 'true'
         run: npm publish --access public --scope grafana
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ env.NPM_TOKEN }}
 
       - name: Setup .npmrc file for GitHub Packages
         if: steps.version_check.outputs.changed == 'true'
