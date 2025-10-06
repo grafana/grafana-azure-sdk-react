@@ -3,7 +3,7 @@ import path from 'path';
 import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
 import { externals } from 'rollup-plugin-node-externals';
-import pkg from './package.json' assert { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 
 const packagePath = './package.json';
 
