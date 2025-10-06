@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "yarn bundle --watch --watch.onStart=\"yarn typecheck\"",
     "build": "yarn clean && yarn typecheck && yarn bundle",
-    "bundle": "rollup -c rollup.config.ts --configPlugin typescript",
+    "bundle": "rollup -c rollup.config.ts --configPlugin typescript --configImportAttributesKey with",
     "clean": "rimraf ./dist ./compiled",
     "lint": "eslint --cache .",
     "prettier:check": "prettier --check --list-different=false --log-level=warn \"**/*.{ts,tsx,scss,md,mdx,json}\"",
