@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Actions
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
-          repository: 'grafana/grafana-github-actions'
+          repository: "grafana/grafana-github-actions"
           path: ./actions
           ref: main
           persist-credentials: false
