@@ -41,7 +41,7 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org"
-          package-manager-cache: true
+          package-manager-cache: false
 
       - name: Install dependencies
         if: steps.version_check.outputs.changed == 'true'

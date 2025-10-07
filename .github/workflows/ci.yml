@@ -20,7 +20,7 @@ jobs:
         with:
           cache: "yarn"
           node-version-file: .nvmrc
-          package-manager-cache: true
+          package-manager-cache: false
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
