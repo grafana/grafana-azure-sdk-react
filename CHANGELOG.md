@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.0.8
+
+- Dependency updates
+- Publishing improvements
+
 ## v0.0.7
 
 - Fix exporting of resource types
