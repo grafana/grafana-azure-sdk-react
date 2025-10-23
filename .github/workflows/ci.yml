@@ -12,14 +12,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           persist-credentials: false
       - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          cache: 'yarn'
+          cache: "yarn"
           node-version-file: .nvmrc
+          package-manager-cache: false
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
