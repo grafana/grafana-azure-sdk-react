@@ -16,7 +16,7 @@ jobs:
     environment: main
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           ref: main
           persist-credentials: false
@@ -37,7 +37,7 @@ jobs:
 
       - name: Setup .npmrc file for NPM registry
         if: steps.version_check.outputs.changed == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
         with:
           node-version-file: ".nvmrc"
           registry-url: "https://registry.npmjs.org"
@@ -57,7 +57,7 @@ jobs:
 
       - name: Setup .npmrc file for GitHub Packages
         if: steps.version_check.outputs.changed == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
         with:
           node-version-file: ".nvmrc"
           registry-url: "https://npm.pkg.github.com"
