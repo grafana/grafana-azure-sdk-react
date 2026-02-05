@@ -22,7 +22,7 @@ jobs:
           persist-credentials: false
       # limit releases to version changes - https://github.com/EndBug/version-check
       - name: Check version changes
-        uses: EndBug/version-check@5102328418c0130d66ca712d755c303e93368ce2
+        uses: EndBug/version-check@75936fdb6cc2b3d6a95c4283dd534402f74b0347
         id: version_check
         with:
           file-url: https://unpkg.com/@grafana/azure-sdk@latest/package.json
