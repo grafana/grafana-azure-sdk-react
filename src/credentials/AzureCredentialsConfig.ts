@@ -1,14 +1,15 @@
 import { config } from '@grafana/runtime';
 
 import { getDefaultAzureCloud } from '../clouds';
+import { AzureDataSourceInstanceSettings, AzureDataSourceSettings } from '../settings';
 import {
   AadCurrentUserCredentials,
+  AzureClientCertificateCredentials,
   AzureClientSecretCredentials,
   AzureCredentials,
   ConcealedSecret,
   instanceOfAzureCredential,
 } from './AzureCredentials';
-import { AzureDataSourceInstanceSettings, AzureDataSourceSettings } from '../settings';
 
 export const concealed: ConcealedSecret = Symbol('Concealed client secret');
 export const concealedLegacy: ConcealedSecret = Symbol('Concealed legacy client secret');
@@ -31,6 +32,14 @@ export function isCredentialsComplete(credentials: AzureCredentials, ignoreSecre
       );
     case 'ad-password':
       return !!(credentials.clientId && credentials.password && credentials.userId);
+    case 'clientcertificate':
+      return !!(
+        credentials.azureCloud &&
+        credentials.tenantId &&
+        credentials.clientId &&
+        credentials.clientCertificate &&
+        credentials.privateKey
+      );
     default:
       throw new Error(`The auth type '${authType}' not supported.`);
   }
@@ -69,6 +78,54 @@ export function getAdPassword(
     const secret = options.secureJsonData?.password;
     return typeof secret === 'string' && secret.length > 0 ? secret : undefined;
   }
+}
+
+export function getClientCertificate(
+  options: AzureDataSourceSettings | AzureDataSourceInstanceSettings
+): undefined | string | ConcealedSecret {
+  if (!('secureJsonFields' in options) || !options.hasOwnProperty('secureJsonFields')) {
+    return undefined;
+  }
+
+  if (options.secureJsonFields.clientCertificate) {
+    // The certificate is concealed on server
+    return concealed;
+  }
+
+  const certificate = options.secureJsonData?.clientCertificate;
+  return typeof certificate === 'string' && certificate.length > 0 ? certificate : undefined;
+}
+
+export function getPrivateKey(
+  options: AzureDataSourceSettings | AzureDataSourceInstanceSettings
+): undefined | string | ConcealedSecret {
+  if (!('secureJsonFields' in options) || !options.hasOwnProperty('secureJsonFields')) {
+    return undefined;
+  }
+
+  if (options.secureJsonFields.privateKey) {
+    // The private key is concealed on server
+    return concealed;
+  }
+
+  const privateKey = options.secureJsonData?.privateKey;
+  return typeof privateKey === 'string' && privateKey.length > 0 ? privateKey : undefined;
+}
+
+export function getPrivateKeyPassword(
+  options: AzureDataSourceSettings | AzureDataSourceInstanceSettings
+): undefined | string | ConcealedSecret {
+  if (!('secureJsonFields' in options) || !options.hasOwnProperty('secureJsonFields')) {
+    return undefined;
+  }
+
+  if (options.secureJsonFields.privateKeyPassword) {
+    // The private key password is concealed on server
+    return concealed;
+  }
+
+  const privateKeyPassword = options.secureJsonData?.privateKeyPassword;
+  return typeof privateKeyPassword === 'string' && privateKeyPassword.length > 0 ? privateKeyPassword : undefined;
 }
 
 export function getDatasourceCredentials(
@@ -119,6 +176,16 @@ export function getDatasourceCredentials(
         clientId: credentials.clientId,
         password: getAdPassword(options),
       };
+    case 'clientcertificate':
+      return {
+        authType: authType,
+        azureCloud: credentials.azureCloud || getDefaultAzureCloud(),
+        tenantId: credentials.tenantId,
+        clientId: credentials.clientId,
+        clientCertificate: getClientCertificate(options),
+        privateKey: getPrivateKey(options),
+        privateKeyPassword: getPrivateKeyPassword(options),
+      };
   }
   if (instanceOfAzureCredential<AadCurrentUserCredentials>(authType, credentials)) {
     if (!config.azure.userIdentityEnabled) {
@@ -129,6 +196,21 @@ export function getDatasourceCredentials(
 
     if (instanceOfAzureCredential<AzureClientSecretCredentials>('clientsecret', credentials.serviceCredentials)) {
       const serviceCredentials = { ...credentials.serviceCredentials, clientSecret: getClientSecret(options) };
+      return {
+        authType: authType,
+        serviceCredentialsEnabled: credentials.serviceCredentialsEnabled,
+        serviceCredentials,
+      };
+    }
+    if (
+      instanceOfAzureCredential<AzureClientCertificateCredentials>('clientcertificate', credentials.serviceCredentials)
+    ) {
+      const serviceCredentials = {
+        ...credentials.serviceCredentials,
+        clientCertificate: getClientCertificate(options),
+        privateKey: getPrivateKey(options),
+        privateKeyPassword: getPrivateKeyPassword(options),
+      };
       return {
         authType: authType,
         serviceCredentialsEnabled: credentials.serviceCredentialsEnabled,
@@ -253,6 +335,42 @@ export function updateDatasourceCredentials(
       };
 
       return options;
+    case 'clientcertificate':
+      options = {
+        ...options,
+        jsonData: {
+          ...options.jsonData,
+          azureCredentials: {
+            authType: 'clientcertificate',
+            azureCloud: credentials.azureCloud || getDefaultAzureCloud(),
+            tenantId: credentials.tenantId,
+            clientId: credentials.clientId,
+          },
+        },
+        secureJsonData: {
+          ...options.secureJsonData,
+          clientCertificate:
+            typeof credentials.clientCertificate === 'string' && credentials.clientCertificate.length > 0
+              ? credentials.clientCertificate
+              : undefined,
+          privateKey:
+            typeof credentials.privateKey === 'string' && credentials.privateKey.length > 0
+              ? credentials.privateKey
+              : undefined,
+          privateKeyPassword:
+            typeof credentials.privateKeyPassword === 'string' && credentials.privateKeyPassword.length > 0
+              ? credentials.privateKeyPassword
+              : undefined,
+        },
+        secureJsonFields: {
+          ...options.secureJsonFields,
+          clientCertificate: credentials.clientCertificate === concealed,
+          privateKey: credentials.privateKey === concealed,
+          privateKeyPassword: credentials.privateKeyPassword === concealed,
+        },
+      };
+
+      return options;
   }
   if (instanceOfAzureCredential<AadCurrentUserCredentials>('currentuser', credentials)) {
     if (!config.azure.userIdentityEnabled) {
@@ -265,6 +383,18 @@ export function updateDatasourceCredentials(
       clientSecret = serviceCredentials.clientSecret;
       // Do this to not expose the secret in unencrypted JSON data
       delete serviceCredentials.clientSecret;
+    }
+    let clientCertificate: string | symbol | undefined;
+    let privateKey: string | symbol | undefined;
+    let privateKeyPassword: string | symbol | undefined;
+    if (instanceOfAzureCredential<AzureClientCertificateCredentials>('clientcertificate', serviceCredentials)) {
+      clientCertificate = serviceCredentials.clientCertificate;
+      privateKey = serviceCredentials.privateKey;
+      privateKeyPassword = serviceCredentials.privateKeyPassword;
+      // Do this to not expose the certificate in unencrypted JSON data
+      delete serviceCredentials.clientCertificate;
+      delete serviceCredentials.privateKey;
+      delete serviceCredentials.privateKeyPassword;
     }
     options = {
       ...options,
@@ -281,11 +411,19 @@ export function updateDatasourceCredentials(
       secureJsonData: {
         ...options.secureJsonData,
         azureClientSecret: typeof clientSecret === 'string' && clientSecret.length > 0 ? clientSecret : undefined,
+        clientCertificate:
+          typeof clientCertificate === 'string' && clientCertificate.length > 0 ? clientCertificate : undefined,
+        privateKey: typeof privateKey === 'string' && privateKey.length > 0 ? privateKey : undefined,
+        privateKeyPassword:
+          typeof privateKeyPassword === 'string' && privateKeyPassword.length > 0 ? privateKeyPassword : undefined,
       },
       secureJsonFields: {
         ...options.secureJsonFields,
         azureClientSecret: clientSecret === concealed,
         clientSecret: clientSecret === concealedLegacy,
+        clientCertificate: clientCertificate === concealed,
+        privateKey: privateKey === concealed,
+        privateKeyPassword: privateKeyPassword === concealed,
       },
     };
 

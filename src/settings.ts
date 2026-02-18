@@ -18,6 +18,11 @@ export interface AzureDataSourceSecureJsonData {
   azureClientSecret?: string;
   password?: string;
 
+  // Use for certificate authentication
+  clientCertificate?: string;
+  privateKey?: string;
+  privateKeyPassword?: string;
+
   // Legacy Azure credentials
   clientSecret?: string;
 }
