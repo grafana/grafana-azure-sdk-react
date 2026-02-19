@@ -55,12 +55,17 @@ export interface AzureAdPasswordCredentials extends AzureCredentialsBase {
   password?: string | ConcealedSecret;
 }
 
+export enum CertificateFormat {
+  PEM = 'pem',
+  PFX = 'pfx',
+}
+
 export interface AzureClientCertificateCredentials extends AzureCredentialsBase {
   authType: 'clientcertificate';
   azureCloud?: string;
   clientId?: string;
   tenantId?: string;
-  certificateFormat?: 'pem' | 'pfx';
+  certificateFormat?: CertificateFormat;
   clientCertificate?: string | ConcealedSecret;
   privateKey?: string | ConcealedSecret;
   privateKeyPassword?: string | ConcealedSecret;

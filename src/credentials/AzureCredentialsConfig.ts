@@ -47,7 +47,7 @@ export function isCredentialsComplete(credentials: AzureCredentials, ignoreSecre
           credentials.azureCloud &&
           credentials.tenantId &&
           credentials.clientId &&
-          credentials.privateKey &&
+          credentials.clientCertificate &&
           credentials.privateKeyPassword
         );
       }
