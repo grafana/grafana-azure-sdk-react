@@ -33,13 +33,26 @@ export function isCredentialsComplete(credentials: AzureCredentials, ignoreSecre
     case 'ad-password':
       return !!(credentials.clientId && credentials.password && credentials.userId);
     case 'clientcertificate':
-      return !!(
-        credentials.azureCloud &&
-        credentials.tenantId &&
-        credentials.clientId &&
-        credentials.clientCertificate &&
-        credentials.privateKey
-      );
+      if (credentials.certificateFormat === 'pem') {
+        return !!(
+          credentials.azureCloud &&
+          credentials.tenantId &&
+          credentials.clientId &&
+          credentials.clientCertificate &&
+          credentials.privateKey
+        );
+      }
+      if (credentials.certificateFormat === 'pfx') {
+        return !!(
+          credentials.azureCloud &&
+          credentials.tenantId &&
+          credentials.clientId &&
+          credentials.privateKey &&
+          credentials.privateKeyPassword
+        );
+      }
+
+      return false;
     default:
       throw new Error(`The auth type '${authType}' not supported.`);
   }
@@ -182,6 +195,7 @@ export function getDatasourceCredentials(
         azureCloud: credentials.azureCloud || getDefaultAzureCloud(),
         tenantId: credentials.tenantId,
         clientId: credentials.clientId,
+        certificateFormat: credentials.certificateFormat,
         clientCertificate: getClientCertificate(options),
         privateKey: getPrivateKey(options),
         privateKeyPassword: getPrivateKeyPassword(options),
@@ -345,6 +359,7 @@ export function updateDatasourceCredentials(
             azureCloud: credentials.azureCloud || getDefaultAzureCloud(),
             tenantId: credentials.tenantId,
             clientId: credentials.clientId,
+            certificateFormat: credentials.certificateFormat,
           },
         },
         secureJsonData: {

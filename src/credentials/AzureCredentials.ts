@@ -60,6 +60,7 @@ export interface AzureClientCertificateCredentials extends AzureCredentialsBase 
   azureCloud?: string;
   clientId?: string;
   tenantId?: string;
+  certificateFormat?: 'pem' | 'pfx';
   clientCertificate?: string | ConcealedSecret;
   privateKey?: string | ConcealedSecret;
   privateKeyPassword?: string | ConcealedSecret;

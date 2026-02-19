@@ -1,5 +1,6 @@
 import { config } from '@grafana/runtime';
 
+import { AzureDataSourceSettings } from '../settings';
 import { AzureCredentials } from './AzureCredentials';
 import {
   concealed,
@@ -7,7 +8,6 @@ import {
   getDatasourceCredentials,
   updateDatasourceCredentials,
 } from './AzureCredentialsConfig';
-import { AzureDataSourceSettings } from '../settings';
 import {
   baseMockClientSecretCredentials,
   dataSourceSettingsWithClientSecretInSecureJSONData,
@@ -63,6 +63,125 @@ describe('AzureCredentialsConfig', () => {
       const result = getDatasourceCredentials(options);
       expect(result).toBeUndefined();
     });
+
+    it.each(['pem', 'pfx'] as const)(
+      'should return certificate credentials from secure json data for %s format',
+      (certificateFormat) => {
+        const options = {
+          jsonData: {
+            azureCredentials: {
+              authType: 'clientcertificate',
+              azureCloud: 'AzureCloud',
+              tenantId: 'testTenantId',
+              clientId: 'testClientId',
+              certificateFormat,
+            },
+          },
+          secureJsonFields: {
+            clientCertificate: false,
+            privateKey: false,
+            privateKeyPassword: false,
+          },
+          secureJsonData: {
+            clientCertificate: 'testClientCertificate',
+            privateKey: 'testPrivateKey',
+            privateKeyPassword: 'testPrivateKeyPassword',
+          },
+        } as unknown as AzureDataSourceSettings;
+
+        const result = getDatasourceCredentials(options);
+        expect(result).toEqual({
+          authType: 'clientcertificate',
+          azureCloud: 'AzureCloud',
+          tenantId: 'testTenantId',
+          clientId: 'testClientId',
+          certificateFormat,
+          clientCertificate: 'testClientCertificate',
+          privateKey: 'testPrivateKey',
+          privateKeyPassword: 'testPrivateKeyPassword',
+        });
+      }
+    );
+
+    it.each(['pem', 'pfx'] as const)(
+      'should return concealed certificate credentials when values are on server for %s format',
+      (certificateFormat) => {
+        const options = {
+          jsonData: {
+            azureCredentials: {
+              authType: 'clientcertificate',
+              azureCloud: 'AzureCloud',
+              tenantId: 'testTenantId',
+              clientId: 'testClientId',
+              certificateFormat,
+            },
+          },
+          secureJsonFields: {
+            clientCertificate: true,
+            privateKey: true,
+            privateKeyPassword: true,
+          },
+        } as unknown as AzureDataSourceSettings;
+
+        const result = getDatasourceCredentials(options);
+        expect(result).toEqual({
+          authType: 'clientcertificate',
+          azureCloud: 'AzureCloud',
+          tenantId: 'testTenantId',
+          clientId: 'testClientId',
+          certificateFormat,
+          clientCertificate: concealed,
+          privateKey: concealed,
+          privateKeyPassword: concealed,
+        });
+      }
+    );
+
+    it.each(['pem', 'pfx'] as const)(
+      'should return current user service credentials for client certificate %s format',
+      (certificateFormat) => {
+        jest.mocked(config).azure.userIdentityEnabled = true;
+        const options = {
+          jsonData: {
+            azureCredentials: {
+              authType: 'currentuser',
+              serviceCredentialsEnabled: true,
+              serviceCredentials: {
+                authType: 'clientcertificate',
+                azureCloud: 'AzureCloud',
+                tenantId: 'testTenantId',
+                clientId: 'testClientId',
+                certificateFormat,
+              },
+            },
+          },
+          secureJsonFields: {
+            clientCertificate: false,
+            privateKey: false,
+            privateKeyPassword: false,
+          },
+          secureJsonData: {
+            clientCertificate: 'testClientCertificate',
+            privateKey: 'testPrivateKey',
+          },
+        } as unknown as AzureDataSourceSettings;
+
+        const result = getDatasourceCredentials(options);
+        expect(result).toEqual({
+          authType: 'currentuser',
+          serviceCredentialsEnabled: true,
+          serviceCredentials: {
+            authType: 'clientcertificate',
+            azureCloud: 'AzureCloud',
+            tenantId: 'testTenantId',
+            clientId: 'testClientId',
+            certificateFormat,
+            clientCertificate: 'testClientCertificate',
+            privateKey: 'testPrivateKey',
+          },
+        });
+      }
+    );
   });
 
   describe('updateDatasourceCredentials', () => {
@@ -118,6 +237,34 @@ describe('AzureCredentialsConfig', () => {
       expect(result?.secureJsonData?.azureClientSecret).toBeUndefined();
       expect(result?.secureJsonFields?.azureClientSecret).toEqual(false);
       expect(result?.secureJsonFields?.clientSecret).toEqual(true);
+    });
+
+    it('should update credentials with client certificate credentials in secure json data', () => {
+      const options = dataSourceSettingsWithMsiCredentials as AzureDataSourceSettings;
+      const result = updateDatasourceCredentials(options, {
+        authType: 'clientcertificate',
+        azureCloud: 'AzureCloud',
+        tenantId: 'testTenantId',
+        clientId: 'testClientId',
+        certificateFormat: 'pem',
+        clientCertificate: 'testClientCertificate',
+        privateKey: 'testPrivateKey',
+        privateKeyPassword: 'testPrivateKeyPassword',
+      } as AzureCredentials);
+
+      expect(result.jsonData.azureCredentials).toEqual({
+        authType: 'clientcertificate',
+        azureCloud: 'AzureCloud',
+        tenantId: 'testTenantId',
+        clientId: 'testClientId',
+        certificateFormat: 'pem',
+      });
+      expect(result?.secureJsonData?.clientCertificate).toEqual('testClientCertificate');
+      expect(result?.secureJsonData?.privateKey).toEqual('testPrivateKey');
+      expect(result?.secureJsonData?.privateKeyPassword).toEqual('testPrivateKeyPassword');
+      expect(result?.secureJsonFields?.clientCertificate).toEqual(false);
+      expect(result?.secureJsonFields?.privateKey).toEqual(false);
+      expect(result?.secureJsonFields?.privateKeyPassword).toEqual(false);
     });
   });
 });
