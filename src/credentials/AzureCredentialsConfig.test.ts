@@ -80,12 +80,12 @@ describe('AzureCredentialsConfig', () => {
           secureJsonFields: {
             clientCertificate: false,
             privateKey: false,
-            privateKeyPassword: false,
+            certificatePassword: false,
           },
           secureJsonData: {
             clientCertificate: 'testClientCertificate',
             privateKey: 'testPrivateKey',
-            privateKeyPassword: 'testPrivateKeyPassword',
+            certificatePassword: 'testCertificatePassword',
           },
         } as unknown as AzureDataSourceSettings;
 
@@ -98,7 +98,7 @@ describe('AzureCredentialsConfig', () => {
           certificateFormat,
           clientCertificate: 'testClientCertificate',
           privateKey: 'testPrivateKey',
-          privateKeyPassword: 'testPrivateKeyPassword',
+          certificatePassword: 'testCertificatePassword',
         });
       }
     );
@@ -119,7 +119,7 @@ describe('AzureCredentialsConfig', () => {
           secureJsonFields: {
             clientCertificate: true,
             privateKey: true,
-            privateKeyPassword: true,
+            certificatePassword: true,
           },
         } as unknown as AzureDataSourceSettings;
 
@@ -132,7 +132,7 @@ describe('AzureCredentialsConfig', () => {
           certificateFormat,
           clientCertificate: concealed,
           privateKey: concealed,
-          privateKeyPassword: concealed,
+          certificatePassword: concealed,
         });
       }
     );
@@ -158,7 +158,7 @@ describe('AzureCredentialsConfig', () => {
           secureJsonFields: {
             clientCertificate: false,
             privateKey: false,
-            privateKeyPassword: false,
+            certificatePassword: false,
           },
           secureJsonData: {
             clientCertificate: 'testClientCertificate',
@@ -249,7 +249,7 @@ describe('AzureCredentialsConfig', () => {
         certificateFormat: 'pem',
         clientCertificate: 'testClientCertificate',
         privateKey: 'testPrivateKey',
-        privateKeyPassword: 'testPrivateKeyPassword',
+        certificatePassword: 'testCertificatePassword',
       } as AzureCredentials);
 
       expect(result.jsonData.azureCredentials).toEqual({
@@ -261,10 +261,10 @@ describe('AzureCredentialsConfig', () => {
       });
       expect(result?.secureJsonData?.clientCertificate).toEqual('testClientCertificate');
       expect(result?.secureJsonData?.privateKey).toEqual('testPrivateKey');
-      expect(result?.secureJsonData?.privateKeyPassword).toEqual('testPrivateKeyPassword');
+      expect(result?.secureJsonData?.certificatePassword).toEqual('testCertificatePassword');
       expect(result?.secureJsonFields?.clientCertificate).toEqual(false);
       expect(result?.secureJsonFields?.privateKey).toEqual(false);
-      expect(result?.secureJsonFields?.privateKeyPassword).toEqual(false);
+      expect(result?.secureJsonFields?.certificatePassword).toEqual(false);
     });
   });
 });

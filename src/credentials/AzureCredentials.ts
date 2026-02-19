@@ -68,7 +68,7 @@ export interface AzureClientCertificateCredentials extends AzureCredentialsBase 
   certificateFormat?: CertificateFormat;
   clientCertificate?: string | ConcealedSecret;
   privateKey?: string | ConcealedSecret;
-  privateKeyPassword?: string | ConcealedSecret;
+  certificatePassword?: string | ConcealedSecret;
 }
 
 export type AzureCredentials =

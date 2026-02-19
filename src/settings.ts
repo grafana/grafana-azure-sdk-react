@@ -21,7 +21,7 @@ export interface AzureDataSourceSecureJsonData {
   // Use for certificate authentication
   clientCertificate?: string;
   privateKey?: string;
-  privateKeyPassword?: string;
+  certificatePassword?: string;
 
   // Legacy Azure credentials
   clientSecret?: string;

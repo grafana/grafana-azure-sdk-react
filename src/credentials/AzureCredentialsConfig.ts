@@ -48,7 +48,7 @@ export function isCredentialsComplete(credentials: AzureCredentials, ignoreSecre
           credentials.tenantId &&
           credentials.clientId &&
           credentials.clientCertificate &&
-          credentials.privateKeyPassword
+          credentials.certificatePassword
         );
       }
 
@@ -125,20 +125,20 @@ export function getPrivateKey(
   return typeof privateKey === 'string' && privateKey.length > 0 ? privateKey : undefined;
 }
 
-export function getPrivateKeyPassword(
+export function getCertificatePassword(
   options: AzureDataSourceSettings | AzureDataSourceInstanceSettings
 ): undefined | string | ConcealedSecret {
   if (!('secureJsonFields' in options) || !options.hasOwnProperty('secureJsonFields')) {
     return undefined;
   }
 
-  if (options.secureJsonFields.privateKeyPassword) {
+  if (options.secureJsonFields.certificatePassword) {
     // The private key password is concealed on server
     return concealed;
   }
 
-  const privateKeyPassword = options.secureJsonData?.privateKeyPassword;
-  return typeof privateKeyPassword === 'string' && privateKeyPassword.length > 0 ? privateKeyPassword : undefined;
+  const certificatePassword = options.secureJsonData?.certificatePassword;
+  return typeof certificatePassword === 'string' && certificatePassword.length > 0 ? certificatePassword : undefined;
 }
 
 export function getDatasourceCredentials(
@@ -198,7 +198,7 @@ export function getDatasourceCredentials(
         certificateFormat: credentials.certificateFormat,
         clientCertificate: getClientCertificate(options),
         privateKey: getPrivateKey(options),
-        privateKeyPassword: getPrivateKeyPassword(options),
+        certificatePassword: getCertificatePassword(options),
       };
   }
   if (instanceOfAzureCredential<AadCurrentUserCredentials>(authType, credentials)) {
@@ -223,7 +223,7 @@ export function getDatasourceCredentials(
         ...credentials.serviceCredentials,
         clientCertificate: getClientCertificate(options),
         privateKey: getPrivateKey(options),
-        privateKeyPassword: getPrivateKeyPassword(options),
+        certificatePassword: getCertificatePassword(options),
       };
       return {
         authType: authType,
@@ -372,16 +372,16 @@ export function updateDatasourceCredentials(
             typeof credentials.privateKey === 'string' && credentials.privateKey.length > 0
               ? credentials.privateKey
               : undefined,
-          privateKeyPassword:
-            typeof credentials.privateKeyPassword === 'string' && credentials.privateKeyPassword.length > 0
-              ? credentials.privateKeyPassword
+          certificatePassword:
+            typeof credentials.certificatePassword === 'string' && credentials.certificatePassword.length > 0
+              ? credentials.certificatePassword
               : undefined,
         },
         secureJsonFields: {
           ...options.secureJsonFields,
           clientCertificate: credentials.clientCertificate === concealed,
           privateKey: credentials.privateKey === concealed,
-          privateKeyPassword: credentials.privateKeyPassword === concealed,
+          certificatePassword: credentials.certificatePassword === concealed,
         },
       };
 
@@ -401,15 +401,15 @@ export function updateDatasourceCredentials(
     }
     let clientCertificate: string | symbol | undefined;
     let privateKey: string | symbol | undefined;
-    let privateKeyPassword: string | symbol | undefined;
+    let certificatePassword: string | symbol | undefined;
     if (instanceOfAzureCredential<AzureClientCertificateCredentials>('clientcertificate', serviceCredentials)) {
       clientCertificate = serviceCredentials.clientCertificate;
       privateKey = serviceCredentials.privateKey;
-      privateKeyPassword = serviceCredentials.privateKeyPassword;
+      certificatePassword = serviceCredentials.certificatePassword;
       // Do this to not expose the certificate in unencrypted JSON data
       delete serviceCredentials.clientCertificate;
       delete serviceCredentials.privateKey;
-      delete serviceCredentials.privateKeyPassword;
+      delete serviceCredentials.certificatePassword;
     }
     options = {
       ...options,
@@ -429,8 +429,8 @@ export function updateDatasourceCredentials(
         clientCertificate:
           typeof clientCertificate === 'string' && clientCertificate.length > 0 ? clientCertificate : undefined,
         privateKey: typeof privateKey === 'string' && privateKey.length > 0 ? privateKey : undefined,
-        privateKeyPassword:
-          typeof privateKeyPassword === 'string' && privateKeyPassword.length > 0 ? privateKeyPassword : undefined,
+        certificatePassword:
+          typeof certificatePassword === 'string' && certificatePassword.length > 0 ? certificatePassword : undefined,
       },
       secureJsonFields: {
         ...options.secureJsonFields,
@@ -438,7 +438,7 @@ export function updateDatasourceCredentials(
         clientSecret: clientSecret === concealedLegacy,
         clientCertificate: clientCertificate === concealed,
         privateKey: privateKey === concealed,
-        privateKeyPassword: privateKeyPassword === concealed,
+        certificatePassword: certificatePassword === concealed,
       },
     };
 
