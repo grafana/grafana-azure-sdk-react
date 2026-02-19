@@ -2,6 +2,7 @@
   "ignorePaths": [".github/**", "node_modules/**", "dist/**", "yarn.lock", "src/resources/**", "compiled/**"],
   "words": [
     "clientsecret",
+    "clientcertificate",
     "currentuser",
     "typecheck",
     "workloadidentity",
