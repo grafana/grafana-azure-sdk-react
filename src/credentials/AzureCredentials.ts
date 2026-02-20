@@ -5,7 +5,8 @@ export type AzureAuthType =
   | 'clientsecret'
   | 'clientsecret-obo'
   | 'currentuser'
-  | 'ad-password';
+  | 'ad-password'
+  | 'clientcertificate';
 
 export type ConcealedSecret = symbol;
 
@@ -17,6 +18,7 @@ export interface AadCurrentUserCredentials extends AzureCredentialsBase {
   authType: 'currentuser';
   serviceCredentials?:
     | AzureClientSecretCredentials
+    | AzureClientCertificateCredentials
     | AzureManagedIdentityCredentials
     | AzureWorkloadIdentityCredentials;
   serviceCredentialsEnabled?: boolean;
@@ -53,13 +55,30 @@ export interface AzureAdPasswordCredentials extends AzureCredentialsBase {
   password?: string | ConcealedSecret;
 }
 
+export enum CertificateFormat {
+  PEM = 'pem',
+  PFX = 'pfx',
+}
+
+export interface AzureClientCertificateCredentials extends AzureCredentialsBase {
+  authType: 'clientcertificate';
+  azureCloud?: string;
+  clientId?: string;
+  tenantId?: string;
+  certificateFormat?: CertificateFormat;
+  clientCertificate?: string | ConcealedSecret;
+  privateKey?: string | ConcealedSecret;
+  certificatePassword?: string | ConcealedSecret;
+}
+
 export type AzureCredentials =
   | AadCurrentUserCredentials
   | AzureManagedIdentityCredentials
   | AzureWorkloadIdentityCredentials
   | AzureClientSecretCredentials
   | AzureClientSecretOboCredentials
-  | AzureAdPasswordCredentials;
+  | AzureAdPasswordCredentials
+  | AzureClientCertificateCredentials;
 
 export function instanceOfAzureCredential<T extends AzureCredentials>(
   authType: AzureAuthType,
