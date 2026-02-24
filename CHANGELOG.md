@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.0
+
+- App registration certificate auth support [#292](https://github.com/grafana/grafana-azure-sdk-react/pull/292)
+- Dependency updates
+
 ## v0.0.8
 
 - Dependency updates
