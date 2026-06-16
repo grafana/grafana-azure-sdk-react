@@ -84,7 +84,7 @@
   "resolutions": {
     "wrap-ansi": "7.0.0",
     "string-width": "4.2.3",
-    "protobufjs": "7.6.1",
+    "protobufjs": "7.6.3",
     "flatted": "3.4.2",
     "@isaacs/brace-expansion": "5.0.1",
     "immutable": "5.1.5",
