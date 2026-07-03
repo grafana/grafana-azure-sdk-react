@@ -87,7 +87,7 @@
     "protobufjs": "7.6.3",
     "flatted": "3.4.2",
     "@isaacs/brace-expansion": "5.0.1",
-    "immutable": "5.1.5",
+    "immutable": "5.1.9",
     "handlebars": "4.7.9"
   },
   "engines": {
