@@ -9,8 +9,8 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "yarn bundle --watch --watch.onStart=\"yarn typecheck\"",
-    "build": "yarn clean && yarn typecheck && yarn bundle",
+    "dev": "npm run bundle -- --watch --watch.onStart=\"npm run typecheck\"",
+    "build": "npm run clean && npm run typecheck && npm run bundle",
     "bundle": "rollup -c rollup.config.ts --configPlugin typescript --configImportAttributesKey with",
     "clean": "rimraf ./dist ./compiled",
     "lint": "eslint --cache .",
@@ -81,17 +81,23 @@
     "tslib": "2.8.1",
     "typescript": "5.9.3"
   },
-  "resolutions": {
+  "overrides": {
     "wrap-ansi": "7.0.0",
     "string-width": "4.2.3",
     "protobufjs": "7.6.3",
     "flatted": "3.4.2",
     "@isaacs/brace-expansion": "5.0.1",
     "immutable": "5.1.5",
-    "handlebars": "4.7.9"
+    "handlebars": "4.7.9",
+    "@testing-library/react-hooks": {
+      "react": "$react",
+      "react-dom": "$react-dom",
+      "@types/react": "$@types/react"
+    }
   },
   "engines": {
-    "node": ">=24.5.0"
+    "node": ">=24.5.0",
+    "npm": ">=11.12.1"
   },
-  "packageManager": "yarn@4.14.0"
+  "packageManager": "npm@11.18.0"
 }
