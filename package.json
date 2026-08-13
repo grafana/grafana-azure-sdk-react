@@ -48,7 +48,7 @@
     "@stylistic/eslint-plugin-ts": "4.4.1",
     "@swc/core": "1.14.0",
     "@swc/jest": "0.2.39",
-    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.0",
     "@testing-library/react-hooks": "8.0.1",
     "@types/jest": "30.0.0",
