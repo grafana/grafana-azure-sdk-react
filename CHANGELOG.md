@@ -2,7 +2,7 @@
 
 ## v0.1.2
 
-- Patch development dependency security advisories
+- Dependency updates
 
 ## v0.1.1
 
