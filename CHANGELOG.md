@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.2
+
+- Patch development dependency security advisories
+
 ## v0.1.1
 
 - Dependency updates
