@@ -84,7 +84,7 @@
   "resolutions": {
     "wrap-ansi": "7.0.0",
     "string-width": "4.2.3",
-    "protobufjs": "7.6.5",
+    "protobufjs": "8.8.1",
     "flatted": "3.4.2",
     "immutable": "5.1.8",
     "handlebars": "4.7.10",
