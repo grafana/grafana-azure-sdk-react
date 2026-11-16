@@ -82,7 +82,7 @@
     "typescript": "5.9.3"
   },
   "resolutions": {
-    "wrap-ansi": "7.0.0",
+    "wrap-ansi": "10.0.2",
     "string-width": "8.3.0",
     "protobufjs": "8.8.1",
     "flatted": "3.4.2",
